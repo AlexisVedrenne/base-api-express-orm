@@ -19,10 +19,6 @@ This repository provides a base REST API built with Node.js, Express.js, and Seq
 - PostgreSQL (or any Sequelize-compatible DBMS)
 - npm
 
-Voici la section "Installation" modifiée pour inclure les instructions avec npm et yarn :
-
----
-
 ## Installation
 
 1. Clone the repository:
