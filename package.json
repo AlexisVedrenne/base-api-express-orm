@@ -24,13 +24,22 @@
       "src/middleware/**/*.js",
       "src/models/**/*.js",
       "src/routes/**/*.js",
-      "src/services/**/*.js"
+      "src/services/**/*.js",
+      "src/bin/certs/**/*",
+      "node_modules/axios/**/*",
+      "src/assets/images/**/*",
+      "src/assets/templates/**/*",
+      "src/assets/fonts/**/*",
+      "migrations/**/*.js",
+      "seeders/**/*.js",
+      "config/config.json"
     ],
     "scripts": [
       "src/bin/**/*.js"
     ],
     "targets": [
-      "node16-win-x64"
+      "node16-win-x64",
+      "node16-linux-x64"
     ],
     "outputPath": "dist"
   },

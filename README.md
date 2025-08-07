@@ -66,6 +66,36 @@ This repository provides a base REST API built with Node.js, Express.js, and Seq
    yarn dev
    ```
 
+## Packaging with `pkg` (Linux & Windows)
+
+This project is configured to use [`pkg`](https://github.com/vercel/pkg) to generate standalone executables for both Linux and Windows platforms.
+
+### How to build
+
+1. Install `pkg` globally if you haven't already:
+   ```bash
+   npm install -g pkg
+   ```
+
+2. Build the executable:
+   ```bash
+   npm run build
+   ```
+   or directly with:
+   ```bash
+   pkg .
+   ```
+
+3. The executables will be generated in the `dist` folder for:
+   - **Windows** (`node16-win-x64`)
+   - **Linux** (`node16-linux-x64`)
+
+### Notes
+
+- The packaging configuration is defined in the `package.json` under the `pkg` field.
+- All necessary assets and scripts are included for the build.
+- You can adjust the targets in `package.json` if you need other platforms.
+
 ## Project Structure
 
 ```
