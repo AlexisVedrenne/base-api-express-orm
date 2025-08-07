@@ -88,6 +88,49 @@ base-api-express-orm/
 └── README.md
 ```
 
+## Sequelize Configuration (`config/config.json`)
+
+The `config/config.json` file contains the database connection settings used by Sequelize CLI for migrations and seeders. It defines different environments (development, test, production) and their respective database credentials.
+
+### Example structure
+
+```json
+{
+  "development": {
+    "username": "your_db_user",
+    "password": "your_db_password",
+    "database": "your_db_name",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "your_db_user",
+    "password": "your_db_password",
+    "database": "your_test_db_name",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "your_db_user",
+    "password": "your_db_password",
+    "database": "your_prod_db_name",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
+```
+
+### How it works
+
+- **Sequelize CLI** uses this file to know how to connect to your database when running commands like `db:migrate` or `db:seed:all`.
+- You can set different credentials for each environment (development, test, production).
+- Make sure to keep your credentials secure and never commit sensitive information in a public repository.
+
+### Tips
+
+- You can use environment variables in this file for better security. For example, with `process.env.DB_USER` (see Sequelize documentation for dynamic config).
+- If you change your database settings, update this file accordingly.
+
 ## Best Practices
 
 - Always validate and sanitize user input.

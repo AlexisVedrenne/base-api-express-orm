@@ -1,15 +1,15 @@
 const fs = require("fs");
 const path = require("path");
-const baseCheminTemplate = "/assets/templates";
+const baseTemplatePath = "/assets/templates";
 
 function delay(milliseconds) {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
 
-function importTemplate(nomTemplate, params) {
+function importTemplate(templateName, params) {
   const templatePath = path.join(
     __dirname,
-    `../${baseCheminTemplate}/${nomTemplate}`
+    `../${baseTemplatePath}/${templateName}`
   );
   const template = fs.readFileSync(templatePath, "utf8");
   return renderTemplate(template, params);
@@ -21,9 +21,9 @@ function renderTemplate(template, params) {
   });
 }
 
-const systemeService = {
+const systemService = {
   delay: delay,
   importTemplate: importTemplate,
 };
 
-module.exports = systemeService;
+module.exports = systemService;

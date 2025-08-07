@@ -28,11 +28,11 @@ function getLogPathForFile(fileName) {
 function appendOrCreateLog(filePath, content) {
   if (fs.existsSync(filePath)) {
     fs.appendFile(filePath, `\n${content}`, (err) => {
-      if (err) console.error(`Erreur lors de l'ajout de la ligne : ${err}`);
+      if (err) console.error(`Error while appending line: ${err}`);
     });
   } else {
     fs.writeFile(filePath, content, (err) => {
-      if (err) console.error(`Erreur lors de la création du fichier : ${err}`);
+      if (err) console.error(`Error while creating file: ${err}`);
     });
   }
 }
@@ -66,10 +66,10 @@ function createLogSysteme(message, fonction) {
       function: fonction,
       code: code,
     });
-    console.log(`[LOG INFO SYSTEME] : ${message}`);
+    console.log(`[SYSTEM INFO LOG] : ${message}`);
     addLogTexteSysteme(message, fonction, code);
   } catch (e) {
-    console.error(`[LOG INFO] ERREUR SYSTEME : Log non enregistré ${e}`);
+    console.error(`[LOG INFO] SYSTEM ERROR: Log not saved ${e}`);
   }
 }
 
@@ -81,20 +81,20 @@ function createErrorSysteme(message, fonction) {
       function: fonction,
       code: code,
     });
-    console.log(`[LOG ERREUR SYSTEME] : ${message}`);
+    console.log(`[SYSTEM ERROR LOG] : ${message}`);
     addLogTexteErreurSysteme(message, fonction, code);
   } catch (e) {
-    console.error(`[LOG INFO] ERREUR SYSTEME : Log non enregistré ${e}`);
+    console.error(`[LOG INFO] SYSTEM ERROR: Log not saved ${e}`);
   }
 }
 
 function createLogApi(message, logData) {
   try {
     LogApi.create(logData);
-    console.log(`[LOG INFO API] : ${message}`);
+    console.log(`[API INFO LOG] : ${message}`);
     addLogTexteApi(logData);
   } catch (e) {
-    console.error(`[LOG INFO] ERREUR API : Log non enregistré ${e}`);
+    console.error(`[LOG INFO] API ERROR: Log not saved ${e}`);
   }
 }
 
