@@ -23,8 +23,8 @@ This repository provides a base REST API built with Node.js, Express.js, and Seq
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/api-base.git
-   cd api-base
+   git clone https://github.com/AlexisVedrenne/base-api-express-orm.git
+   cd base-api-express-orm
    ```
 
 2. Install dependencies (choose one):
@@ -69,7 +69,7 @@ This repository provides a base REST API built with Node.js, Express.js, and Seq
 ## Project Structure
 
 ```
-api-base/
+base-api-express-orm/
 ├── src/
 │   ├── assets/         # Images, email templates, etc.
 │   ├── bin/            # Application entry point
