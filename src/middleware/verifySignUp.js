@@ -1,5 +1,5 @@
 // Importe le modèle de base de données (db) et les rôles (ROLES)
-const { Role, User } = require('../../models');
+const { Role, User } = require('../models');
 
 // Middleware pour vérifier si le nom d'user est déjà utilisé
 checkDuplicateUserMail = (req, res, next) => {
@@ -14,7 +14,7 @@ checkDuplicateUserMail = (req, res, next) => {
         if (user) {
           // Si un user avec le même nom est trouvé, renvoie une erreur 400
           res.status(400).send({
-            message: "Échec ! Le mail de l'user est déjà utilisé !",
+            message: "Failed! The user’s email is already used!",
           });
           return;
         }
@@ -24,10 +24,10 @@ checkDuplicateUserMail = (req, res, next) => {
       .catch((err) => {
         res
           .status(500)
-          .send({ message: "Impossible de vérifier l'utilisateur." });
+          .send({ message: "Unable to verify user." });
       });
   } else {
-    res.status(400).send({ message: "Vous devez fournir un nom." });
+    res.status(400).send({ message: "You must provide a mail." });
   }
 };
 
@@ -39,7 +39,7 @@ checkRolesExisted = (req, res, next) => {
       if (!Role.includes(req.body.user.roles[i])) {
         // Si le rôle n'existe pas dans la liste des rôles autorisés (ROLES)
         res.status(400).send({
-          message: `Échec ! Le rôle ${req.body.user.roles[i]} n'existe pas `,
+          message: `Failed! The role ${req.body.user.roles[i]} does not exist `,
         });
         return;
       }
@@ -54,13 +54,13 @@ checkPassword = (req, res, next) => {
   if (req.body.user.password) {
     if (req.body.user.password.length < 6) {
       res.status(400).send({
-        message: `Le mot de passe doit faire au moins 6 caractères.`,
+        message: `The password must be at least 6 characters long.`,
       });
       return;
     }
     next();
   } else {
-    res.status(400).send({ message: "Vous devez fournir un mot de passe." });
+    res.status(400).send({ message: "You must provide a password." });
   }
 };
 

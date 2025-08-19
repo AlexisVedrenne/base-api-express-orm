@@ -9,7 +9,7 @@ async function sendResetPassword(user, uuid) {
       Messages: [
         {
           From: {
-            Email: "alexisvedrenne482@gmail.com",
+            Email: config.mailSender,
             Name: config.appName,
           },
           To: [
@@ -18,7 +18,7 @@ async function sendResetPassword(user, uuid) {
               Name: `${user.lastName} ${user.name}`,
             },
           ],
-          Subject: `[${config.appName}] Demande de changement de mot de passe`,
+          Subject: `[${config.appName}] Request for password change`,
           HTMLPart: systemeService.importTemplate(
             "password.template.html",
             user

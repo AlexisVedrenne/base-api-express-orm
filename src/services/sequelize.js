@@ -1,5 +1,5 @@
 
-const { sequelize } = require('../../models');
+const { sequelize } = require('../models');
 const logs = require("./log.js");
 
 async function addEmbbedAndIndex(table, nbVector) {
@@ -15,7 +15,7 @@ async function addEmbbedAndIndex(table, nbVector) {
       ALTER TABLE "${table}" ADD COLUMN embedding vector(${nbVector});
     `);
     logs.createLogSysteme(
-      `Colonne "embedding" ajoutée avec le type vector pour ${table}.`,
+      `Column "embedding" added with the vector type for ${table}.`,
       "addEmbbedAndIndex"
     );
     await sequelize.query(`
@@ -35,13 +35,12 @@ async function initPgvector(nbVector) {
       CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
       `);
     logs.createLogSysteme(
-      'Extension "pgvector" et "uuid-ossp" vérifiée ou créée.',
+      'Extension "pgvector" and "uuid-ossp" checked or created.',
       "initPgvector"
     );
-    // await addEmbbedAndIndex("recipes", nbVector);
   } catch (error) {
     logs.createErrorSysteme(
-      "Impossible de modifier les tables pour pgvector. " + error,
+      "Unable to edit tables for pgvector. " + error,
       "initPgvector"
     );
   }
@@ -54,11 +53,10 @@ async function initPgvector(nbVector) {
  */
 async function initBdd() {
   try {
-    // await db.sequelize.sync({ force: force, alter:true });
     await initPgvector(768);
-    logs.createLogSysteme(`Base de donnée initialisée.`, "initBdd");
+    logs.createLogSysteme(`Database initialized.`, "initBdd");
   } catch (e) {
-    console.error(`Impossible d'initialiser la BDD : ${e.message}`);
+    console.error(`Unable to initialize the database : ${e.message}`);
   }
 }
 

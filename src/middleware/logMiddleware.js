@@ -31,7 +31,7 @@ log = (req, res, next) => {
       const decoded = jwt.verify(token, config.secret);
       logData.userId = decoded.id;
     } catch (err) {
-      console.error("Erreur de vérification du token JWT :", err);
+      console.error("JWT token verification error :", err);
       logData.userId = null;
     }
   } else {
@@ -43,7 +43,7 @@ log = (req, res, next) => {
     const end = Date.now();
     logData.responseTime = end - start;
     logData.responseBody = res.statusMessage;
-    logs.createLogApi("Requete API termine",logData)
+    logs.createLogApi("API request completed",logData)
   });
 
   next();

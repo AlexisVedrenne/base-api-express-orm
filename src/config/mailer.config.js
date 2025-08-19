@@ -8,6 +8,7 @@ const mailerConfig = {
   redirectUrl: process.env[`REDIRECT_URL`],
   saveUrl:process.env[`SAVE_URL`],
   appName: process.env[`APP_NAME`],
+  mailSender:process.env[`MAIL_SENDER`]
 };
 
 module.exports = mailerConfig;

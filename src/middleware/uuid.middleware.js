@@ -5,14 +5,14 @@ verifyUuid = async (req, res, next) => {
   let tokenUuid = req.headers["x-access-uuid"];
   if (!tokenUuid) {
     return res.status(403).send({
-      message: "Aucun UUID n'est fournie.",
+      message: "No UUID is provided.",
     });
   } else {
     const uuid = await uuidController.findOneByUuid(tokenUuid);
     if (uuid) {
       next();
     } else {
-      return res.status(404).send({ message: "Uuid invalide." });
+      return res.status(404).send({ message: "Invalid UUID." });
     }
   }
 };

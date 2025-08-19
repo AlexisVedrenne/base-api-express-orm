@@ -8,13 +8,13 @@ module.exports = function (app) {
   app.get(
     `${baseUrl}/api`,
     [authJwt.verifyToken, authJwt.isAdministrateur, logMiddleware.setHeader],
-    controller.getAllApi
+    controller.getAllLogApiApi
   );
 
   app.get(
     `${baseUrl}/system`,
     [authJwt.verifyToken, authJwt.isAdministrateur, logMiddleware.setHeader],
-    controller.getAllSystem
+    controller.getAllSystemApi
   );
 
   app.delete(

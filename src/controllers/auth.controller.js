@@ -1,5 +1,5 @@
 const config = require("../config/auth.config");
-const { User, Role } = require('../../models');
+const { User, Role } = require('../models');
 const { Op } = require('sequelize');
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -13,11 +13,11 @@ exports.resetPassword = async (req, res) => {
     const user = await utilisateurController.findOneByMail(req.body.mail);
     const uuid = await uuidController.create(user.id);
     await mailerService.sendResetPassword(user, uuid);
-    const message = `Lien envoyé à ${user.mail}.`;
+    const message = `Link sent to ${user.mail}.`;
     logs.createLogSysteme(message, "resetPassword");
     res.send({ message: message });
   } catch (e) {
-    const message = `Impossible d'envoyer le lien. Détail : ${e.message}`;
+    const message = `Unable to send the link. Detail : ${e.message}`;
     logs.createErrorSysteme(message, "resetPassword");
     res.status(500).send({ message: message });
   }
@@ -41,16 +41,16 @@ exports.signup = async (req, res) => {
       });
       await newUser.setRoles(roles);
       res.send({
-        message: `Utilisateur ${newUser.lastName} ${newUser.name} est bien enregistré !`,
+        message: `Utilisateur ${newUser.lastName} ${newUser.name} is well registered !`,
       });
     } else {
       await newUser.setRoles([1]);
       res.send({
-        message: `Utilisateur ${newUser.lastName} ${newUser.name} est bien enregistré !`,
+        message: `Utilisateur ${newUser.lastName} ${newUser.name} is well registered !`,
       });
     }
   } catch (e) {
-    const message = `Impossible d'envoyer le lien. Détail : ${e.message}`;
+    const message = `Unable to send the link. Detail : ${e.message}`;
     logs.createErrorSysteme(message, "resetPasingupssword");
     res.status(500).send({ message: message });
   }
@@ -118,14 +118,14 @@ exports.login = async (req, res) => {
       } else {
         res.status(401).send({
           accessToken: null,
-          message: "Mot de passe invalide.",
+          message: "Invalid password.",
         });
       }
     } else {
-      res.status(404).send({ message: "Utilisateur introuvable." });
+      res.status(404).send({ message: "User not found." });
     }
   } catch (e) {
-    const message = `Impossible de se connecter. Détail : ${e.message}`;
+    const message = `Unable to connect. Detail : ${e.message}`;
     logs.createErrorSysteme(message, "login");
     res.status(500).send({ message: message });
   }
@@ -138,7 +138,7 @@ exports.updateAccount = async (req, res) => {
     const { name, lastName, mail, imageName, imageUrl } = req.body;
     const user = await User.findByPk(userId);
     if (!user) {
-      return res.status(404).send({ message: "Utilisateur non trouvé." });
+      return res.status(404).send({ message: "User not found." });
     }
     await user.update({ name, lastName, mail, imageName, imageUrl });
     const newUser = await User.findOne({
@@ -156,11 +156,11 @@ exports.updateAccount = async (req, res) => {
       },
     });
     res.send({
-      message: "Informations du compte mises à jour avec succès.",
+      message: "Account information updated successfully.",
       user: newUser,
     });
   } catch (e) {
-    const message = `Impossible de mettre à jour le compte utilisateur. Détail : ${e.message}`;
+    const message = `Unable to update user account. Detail : ${e.message}`;
     logs.createErrorSysteme(message, "updateAccount");
     res.status(500).send({ message });
   }
@@ -172,12 +172,12 @@ exports.deleteAccount = async (req, res) => {
     const userId = req.userId;
     const user = await User.findByPk(userId);
     if (!user) {
-      return res.status(404).send({ message: "Utilisateur non trouvé." });
+      return res.status(404).send({ message: "User not found." });
     }
     await user.destroy();
-    res.send({ message: "Compte utilisateur supprimé avec succès." });
+    res.send({ message: "User account successfully deleted." });
   } catch (e) {
-    const message = `Impossible de supprimer le compte utilisateur. Détail : ${e.message}`;
+    const message = `Unable to delete user account. Detail: ${e.message}`;
     logs.createErrorSysteme(message, "deleteAccount");
     res.status(500).send({ message });
   }

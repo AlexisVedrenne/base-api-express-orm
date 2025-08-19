@@ -6,9 +6,9 @@ const baseUrl = "/api/user";
 
 module.exports = function (app) {
   app.get(
-    `${baseUrl}/all`,
+    `${baseUrl}`,
     [authJwt.verifyToken, authJwt.isAdministrateur, logMiddleware.log],
-    controller.getAll
+    controller.getAllApi
   );
 
   app.put(

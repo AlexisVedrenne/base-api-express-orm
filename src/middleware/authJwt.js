@@ -1,20 +1,20 @@
 const jwt = require("jsonwebtoken");
 const config = require("../config/auth.config.js");
-const { User } = require('../../models');
+const { User } = require('../models');
 
 // Middleware pour vérifier si un token d'accès est fourni et s'il est valide
 verifyToken = (req, res, next) => {
   let token = req.headers["x-access-token"];
   if (!token) {
     return res.status(403).send({
-      message: "Vous devez fournir un token !",
+      message: "You must provide a token!",
     });
   }
 
   jwt.verify(token, config.secret, (err, decoded) => {
     if (err) {
       return res.status(401).send({
-        message: "Ressource non autorisée !",
+        message: "Unauthorized resource!",
       });
     }
     req.userId = decoded.id;
@@ -35,7 +35,7 @@ isAdministrateur = (req, res, next) => {
         }
 
         res.status(403).send({
-          message: "Ressource réservée aux administrateurs.",
+          message: "Resource reserved for administrators.",
         });
         return;
       });
@@ -43,7 +43,7 @@ isAdministrateur = (req, res, next) => {
     .catch((err) => {
       res.status(500).send({
         message:
-          "Erreur : Token corrompu ou impossible de vérifier le rôle d'accès.",
+          "Error: Token corrupted or unable to verify access role.",
       });
     });
 };

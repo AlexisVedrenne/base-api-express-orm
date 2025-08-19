@@ -1,26 +1,91 @@
-const { LogSysteme, LogApi } = require('../../models');
+const { LogSysteme, LogApi } = require("../models");
 const moment = require("moment");
 const { Op } = require("sequelize");
+const pagination = require("../config/pagination.config");
 
-exports.getAllApi = async (req, res) => {
+exports.getAllLogApi = async (
+  page = pagination.page,
+  pageSize = pagination.min,
+  search = ""
+) => {
   try {
-    const logs = await LogApi.findAll();
-    res.send(logs);
+    const offset = (page - 1) * pageSize;
+    const { count, rows } = await LogApi.findAndCountAll({
+      limit: pageSize,
+      offset,
+      where: {
+        message: {
+          [Op.iLike]: `%${search}%`,
+        },
+      },
+    });
+    return {
+      totalItems: parseInt(count),
+      totalPages: Math.ceil(parseInt(count) / parseInt(pageSize)),
+      currentPage: parseInt(page),
+      data: rows,
+    };
   } catch (e) {
-    const message = `Impossible de récupérer les logs. Détail : ${e.message}`;
-    logs.createErrorSysteme(message, "getAllApi");
-    res.status(500).send({ message: message });
+    const message = `Unable to retrieve logs. Detail : ${e.message}`;
+    logs.createErrorSysteme(message, "getAllLogApi");
+    throw e;
   }
 };
 
-exports.getAllSystem = async (req, res) => {
+exports.getAllLogApiApi = async (req, res) => {
   try {
-    const logs = await LogSystem.findAll();
-    res.send(logs);
+    res.send(
+      await this.getAllLogApi(
+        req.query.page,
+        req.query.pageSize,
+        req.query.search
+      )
+    );
   } catch (e) {
-    const message = `Impossible de récupérer les logs. Détail : ${e.message}`;
+    res.status(500).send({ message: e });
+  }
+};
+
+exports.getAllSystem = async (
+  page = pagination.page,
+  pageSize = pagination.min,
+  search = ""
+) => {
+  try {
+    const offset = (page - 1) * pageSize;
+    const { count, rows } = await LogSystem.findAndCountAll({
+      limit: pageSize,
+      offset,
+      where: {
+        message: {
+          [Op.iLike]: `%${search}%`,
+        },
+      },
+    });
+    return {
+      totalItems: parseInt(count),
+      totalPages: Math.ceil(parseInt(count) / parseInt(pageSize)),
+      currentPage: parseInt(page),
+      data: rows,
+    };
+  } catch (e) {
+    const message = `Unable to retrieve logs. Detail : ${e.message}`;
     logs.createErrorSysteme(message, "getAllSystem");
-    res.status(500).send({ message: message });
+    throw e;
+  }
+};
+
+exports.getAllSystemApi = async (req, res) => {
+  try {
+    res.send(
+      await this.getAllSystem(
+        req.query.page,
+        req.query.pageSize,
+        req.query.search
+      )
+    );
+  } catch (e) {
+    res.status(500).send({ message: e });
   }
 };
 
@@ -35,9 +100,9 @@ exports.purgeAllLog = async (req, res) => {
       where: {},
       truncate: true,
     });
-    res.send({ message: "Tous les logs on était vidé." });
+    res.send({ message: "All the logs were cleared." });
   } catch (e) {
-    const message = `Impossible de vider les logs. Détail : ${e.message}`;
+    const message = `Unable to clear the logs. Detail : ${e.message}`;
     logs.createErrorSysteme(message, "purgeAllLog");
     res.status(500).send({ message: message });
   }
@@ -63,7 +128,7 @@ exports.purgeLogNoReq = async () => {
       },
       truncate: true,
     });
-    return `${deletedApi + deletedSystem} lignes de logs supprimées.`;
+    return `${deletedApi + deletedSystem} lines of logs deleted.`;
   } catch (e) {
     throw e;
   }
@@ -74,7 +139,7 @@ exports.purgeLog = async (req, res) => {
     const message = await this.purgeLogNoReq();
     res.send({ message: message });
   } catch (e) {
-    const message = `Impossible de purger les logs des 30 derniers jours. Détail : ${e.message}`;
+    const message = `Unable to purge the logs from the last 30 days. Detail : ${e.message}`;
     logs.createErrorSysteme(message, "purgeLog");
     res.status(500).send({ message: message });
   }

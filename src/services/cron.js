@@ -5,7 +5,7 @@ const uuidController = require("../controllers/uuid.controller");
 function cronDeleteOldUuid() {
   cron.schedule("0 * * * *", () => {
     logs.createLogSysteme(
-      `[CRON] Tâche exécutée à ${new Date().toLocaleString()}`,
+      `[CRON] Task executed at ${new Date().toLocaleString()}`,
       "cronDeleteOldUuid"
     );
     uuidController.deleteOldUuid();

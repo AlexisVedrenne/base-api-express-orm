@@ -1,4 +1,4 @@
-const { User, Uuid } = require('../../models');
+const { User, Uuid } = require('../models');
 const { Op } = require('sequelize');
 const { v1: uuidv1, v4: uuidv4 } = require("uuid");
 const systemeService = require("../services/systeme");
@@ -42,9 +42,9 @@ exports.delete = async (uuid) => {
         },
       },
     });
-    logs.createLogSysteme(`[LOG INFO] UUID ${uuid} supprimé.`,"UUID delete")
+    logs.createLogSysteme(`[LOG INFO] UUID ${uuid} deleted.`,"UUID delete")
   } catch (e) {
-    const message = `Impossible de supprimé l'UUID. Détail : ${e.message}`;
+    const message = `Unable to delete the UUID. Detail : ${e.message}`;
     logs.createErrorSysteme(message, "UUID delete");
     throw message
   }
@@ -63,10 +63,10 @@ exports.updatePassword = async (req, res) => {
         systemeService.importTemplate("UpdatePassword.page.html", params)
       );
     } else {
-      res.status(400).send({ message: "UUID non valide." });
+      res.status(400).send({ message: "Invalid UUID." });
     }
   } catch (e) {
-    const message = `Impossible de vérifier l'uuid.. Détail : ${e.message}`;
+    const message = `Unable to verify the uuid. Detail : ${e.message}`;
     logs.createErrorSysteme(message, "uuid create");
     res.status(500).send({ message: message });
   }
@@ -81,10 +81,10 @@ exports.create = async (utilisateurId) => {
       expiration: new Date(today.getTime() + 24 * 60 * 60 * 1000),
     });
     await uuid.setUser(utilisateurId);
-    logs.createLogSysteme(`UUID ${uuid.uuid} créer pour l'user ID ${utilisateurId}.`,"uuid create")
+    logs.createLogSysteme(`UUID ${uuid.uuid} create for the user ID ${userId}.`,"uuid create")
     return uuid;
   } catch (e) {
-    const message = `Impossible de générer l'UUID. Détail : ${e.message}`;
+    const message = `Unable to generate the UUID. Detail : ${e.message}`;
     logs.createErrorSysteme(message, "uuid create");
     throw message
   }
@@ -100,9 +100,9 @@ exports.deleteOldUuid = async () => {
         },
       },
     });
-    logs.createLogSysteme(`Suppression de ${uuids} vieux uuid de la base.`,"deleteOldUuid")
+    logs.createLogSysteme(`Removal of old ${uuids} uuid from the database.`,"deleteOldUuid")
   } catch (e) {
-    const message = `Impossible de supprimé les anciens UUID. Détail : ${e.message}`;
+    const message = `Unable to delete old UUIDs. Detail : ${e.message}`;
     logs.createErrorSysteme(message, "deleteOldUuid");
     throw message
   }

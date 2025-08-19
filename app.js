@@ -55,7 +55,7 @@ app.use(
     max: 1000, 
     standardHeaders: true,
     legacyHeaders: false,
-    message: "Trop de requêtes. Réessaie dans quelques minutes.",
+    message: "Too many requests. Try again in a few minutes.",
   })
 );
 // Utilise le middleware pour analyser le corps des requêtes au format JSON
@@ -85,15 +85,12 @@ app.use(
     credentials: false,
   })
 );
-// ✅ Optionnel mais utile pour les préflights
 app.options("*", cors());
 
 // Importe et utilise les routes des différents modules
-require("./src/routes/auth.routes")(app); // Routes pour l'authentification
-require("./src/routes/user.routes")(app); // Routes pour les utilisateurs
+require("./src/routes/auth.routes")(app);
+require("./src/routes/user.routes")(app);
 require("./src/routes/log.routes")(app);
 require("./src/routes/uuid.routes")(app)
 
-
-// Exporte l'application Express configurée
 module.exports = app;

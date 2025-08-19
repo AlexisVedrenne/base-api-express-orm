@@ -1,8 +1,9 @@
-const { User, Role,Uuid } = require('../../models');
+const { User, Role, Uuid } = require("../models");
 const bcrypt = require("bcryptjs"); // Importe la bibliothèque bcrypt pour le hachage de mot de passe.
-const { Op } = require('sequelize');
+const { Op } = require("sequelize");
 const controllerUuid = require("./uuid.controller");
 const logs = require("../services/log");
+const pagination = require("../config/pagination.config");
 
 // Fonction pour trouver un user par son ID.
 exports.findOne = async (id) => {
@@ -30,8 +31,7 @@ exports.findOne = async (id) => {
       return null;
     }
   } catch (e) {
-
-    throw e
+    throw e;
   }
 };
 
@@ -90,14 +90,14 @@ exports.updatePassword = async (req, res) => {
           },
         },
       });
-      res.send({ message: "Mot de passe utilisateur mis à jour." });
+      res.send({ message: "Updated user password." });
     } else {
       res
         .status(404)
-        .send({ message: "UUID introuvable pour changer le mot de passe." });
+        .send({ message: "UUID not found to change the password." });
     }
   } catch (e) {
-    const message = `Impossible de mettre à jour le mot de passe. Détail : ${e.message}`;
+    const message = `Unable to update the password. Detail : ${e.message}`;
     logs.createErrorSysteme(message, "updatePassword");
     res.status(500).send({ message: message });
   }
@@ -112,16 +112,23 @@ exports.getOne = async (req, res) => {
       res.send(user);
     }
   } catch (err) {
-    const message = `Erreur lors de la récupération de l'utilisateur. Détail : ${e.message}`;
+    const message = `Error while retrieving the user. Detail : ${e.message}`;
     logs.createErrorSysteme(message, "getOne");
     res.status(500).send({ message: message });
   }
 };
 
 // Fonction pour obtenir tous les utilisateurs (à l'exclusion du mot de passe).
-exports.getAll = async (req, res) => {
+exports.getAll = async (
+  page = pagination.page,
+  pageSize = pagination.min,
+  search = ""
+) => {
   try {
-    const result = await User.findAll({
+    const offset = (page - 1) * pageSize;
+    const { count, rows } = await User.findAndCountAll({
+      limit: pageSize,
+      offset,
       attributes: {
         exclude: ["password"],
       },
@@ -131,12 +138,33 @@ exports.getAll = async (req, res) => {
           as: "roles",
         },
       ],
+      where: {
+        name: {
+          [Op.iLike]: `%${search}%`,
+        },
+      },
+      order: [["name", "ASC"]],
     });
-    res.send(result);
+    return {
+      totalItems: parseInt(count),
+      totalPages: Math.ceil(parseInt(count) / parseInt(pageSize)),
+      currentPage: parseInt(page),
+      data: rows,
+    };
   } catch (e) {
-    const message = `Impossible de récupérer la liste des utilisateurs.. Détail : ${e.message}`;
+    const message = `Unable to retrieve the list of users. Detail : ${e.message}`;
     logs.createErrorSysteme(message, "getAll");
-    res.status(500).send({ message: message });
+    throw message;
+  }
+};
+
+exports.getAllApi = async (req, res) => {
+  try {
+    res.send(
+      await this.getAll(req.query.page, req.query.pageSize, req.query.search)
+    );
+  } catch (e) {
+    res.status(500).send({ message: e });
   }
 };
 
@@ -152,12 +180,12 @@ exports.delete = async (req, res) => {
           },
         },
       });
-      res.send({ message: "Utilisateur supprimé." });
+      res.send({ message: "User deleted." });
     } else {
-      res.status(404).send({ message: "Utilisateur introuvable." });
+      res.status(404).send({ message: "User not found." });
     }
   } catch (e) {
-    const message = `Impossible de supprimer l'utilisateur. Détail : ${e.message}`;
+    const message = `Unable to delete user. Detail : ${e.message}`;
     logs.createErrorSysteme(message, "delete");
     res.status(500).send({ message: message });
   }
@@ -167,7 +195,7 @@ exports.delete = async (req, res) => {
 exports.update = async (req, res) => {
   try {
     const user = await this.findOne(req.body.user.id);
-    delete req.body.user.password
+    delete req.body.user.password;
     if (user) {
       await User.update(req.body.user, {
         where: {
@@ -185,16 +213,16 @@ exports.update = async (req, res) => {
           },
         });
         await user.setRoles(roles).then(() => {
-          res.send({ message: "Mise à jour réussite." });
+          res.send({ message: "Update success." });
         });
       } else {
-        res.send({ message: "Mise à jour réussite." });
+        res.send({ message: "Update success." });
       }
     } else {
-      res.status(404).send({ message: "Utilisateur introuvable." });
+      res.status(404).send({ message: "User not found" });
     }
   } catch (e) {
-    const message = `Impossible de supprimer l'utilisateur. Détail : ${e.message}`;
+    const message = `Unable to delete user. Detail : ${e.message}`;
     logs.createErrorSysteme(message, "getAll");
     res.status(500).send({ message: message });
   }
