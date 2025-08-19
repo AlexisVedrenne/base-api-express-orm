@@ -14,7 +14,7 @@ exports.getAllLogApi = async (
       limit: pageSize,
       offset,
       where: {
-        message: {
+        requestBody: {
           [Op.iLike]: `%${search}%`,
         },
       },
@@ -53,7 +53,7 @@ exports.getAllSystem = async (
 ) => {
   try {
     const offset = (page - 1) * pageSize;
-    const { count, rows } = await LogSystem.findAndCountAll({
+    const { count, rows } = await LogSysteme.findAndCountAll({
       limit: pageSize,
       offset,
       where: {

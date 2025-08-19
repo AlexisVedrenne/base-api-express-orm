@@ -136,6 +136,7 @@ exports.getAll = async (
         {
           model: Role,
           as: "roles",
+          attributes: ["id", "name", "isActif"],
         },
       ],
       where: {

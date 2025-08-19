@@ -82,7 +82,7 @@ exports.login = async (req, res) => {
         });
         const date = new Date();
         await User.update(
-          { lastLogin: date.toLocaleString() },
+          { lastLogin: date },
           {
             where: {
               id: {
@@ -108,6 +108,11 @@ exports.login = async (req, res) => {
             {
               model: Role,
               as: "roles",
+              attributes:[
+                "id",
+                "name",
+                "isActif"
+              ]
             },
           ],
         });

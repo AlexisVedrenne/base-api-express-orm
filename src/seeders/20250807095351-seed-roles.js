@@ -15,6 +15,7 @@ module.exports = {
           if (!id) {
             return queryInterface.bulkInsert('Roles', [{
               name,
+              isActif:true,
               createdAt: new Date(),
               updatedAt: new Date()
             }], {});
